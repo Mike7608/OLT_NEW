@@ -52,22 +52,20 @@ class Payments(models.Model):
                                                   choices=METHOD,
                                                   verbose_name='Способ оплаты'
                                                   )
-    session_id = models.CharField(max_length=50,
-                                  verbose_name="Идентификатор сессии",
+    session_id = models.TextField(verbose_name="Идентификатор сессии",
                                   null=True,
                                   blank=True
                                   )
-    payment_link = models.CharField(max_length=50,
-                                    verbose_name="Ссылка на платеж",
+    payment_link = models.TextField(verbose_name="Ссылка на платеж",
                                     null=True,
                                     blank=True
                                     )
 
-    def create_session(self, success_url, cancel_url):
-        """Создать сессию для платежа."""
-        if not self.session_id or not self.payment_link:
-            return None
-        return create_session(self.payment_link, success_url, cancel_url)
+    # def create_session(self, success_url, cancel_url):
+    #     """Создать сессию для платежа."""
+    #     if not self.session_id or not self.payment_link:
+    #         return None
+    #     return create_session(self.payment_link, success_url, cancel_url)
 
     def __str__(self):
         # pylint: disable=no-member
