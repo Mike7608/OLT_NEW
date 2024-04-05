@@ -21,7 +21,7 @@ def create_price(product_id, price_sum, currency):
     """
 
     if price_sum is not None:
-        price_val = int(price_sum) * 100  # Цена должна быть только в копейках
+        price_val = int(float(price_sum * 100))   # Цена должна быть только в копейках
         price = stripe.Price.create(
             product=product_id,
             unit_amount=price_val,
