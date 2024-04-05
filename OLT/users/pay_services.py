@@ -36,6 +36,7 @@ def create_session(price_id, success_url, cancel_url):
     """
     Создаем сессию для платежа в Stripe
     """
+
     session = stripe.checkout.Session.create(
         success_url=success_url,
         cancel_url=cancel_url,
@@ -48,4 +49,5 @@ def create_session(price_id, success_url, cancel_url):
         ],
         mode="payment"
     )
-    return session.url
+
+    return session.id, session.url
