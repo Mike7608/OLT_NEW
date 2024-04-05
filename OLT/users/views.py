@@ -7,6 +7,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework import generics, viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from OLT import settings
+from materials.models import Course, Lesson
 from users.models import User, Payments
 from users.pay_services import create_product, create_price
 from users.permissions import IsOwner
@@ -57,32 +58,37 @@ class PaymentsViewSet(viewsets.ModelViewSet):
 
 
 class PaymentsCreateAPIView(APIView):
+
     def post(self, request):
         # Берем данные для платежа из запроса
         user = request.user
-        summ = request.data.get('price')
-        pay_method = request.data.get('pay_method')
+        pay_method = 2  # Безналичный
+
+        record_id = request.data.get('id')
+
+        lesson_id = course_id = None
+
+        if request.data.get('course'):
+            # если имеется поле COURSE - значит выбрана оплата урока
+            pay_obj = Lesson.objects.get(pk=record_id)
+            lesson_id = pay_obj.pk
+        else:
+            # иначе выбрана оплата курса
+            pay_obj = Course.objects.get(pk=record_id)
+            course_id = pay_obj.pk
 
         # Создаем продукт в Stripe
-        product_stripe = create_product(request.data.get('title'),  request.data.get('description'))
+        product_stripe = create_product(pay_obj.title,  pay_obj.description)
 
         # Создаем цену в Stripe
-        price_stripe = create_price(product_stripe, summ, 'BYN')
+        price_stripe = create_price(product_stripe, pay_obj.price, 'BYN')
 
         # Получем текущее время для поля pay_date
         pay_date = timezone.now()
 
-        course_id = lesson_id = None
-
-        if request.data.get('course'):
-            # оплата за урок
-            lesson_id = request.data.get("id")
-        else:
-            # оплата за курс
-            course_id = request.data.get("id")
-
         # Создаем запись о платеже в нашей БД
-        payment = Payments.objects.create(user=user, pay_summ=summ, pay_method=pay_method,  session_id=product_stripe,
+        payment = Payments.objects.create(user=user, pay_summ=pay_obj.price, pay_method=pay_method,
+                                          session_id=product_stripe,
                                           payment_link=price_stripe, date_pay=pay_date, pay_lesson_id=lesson_id,
                                           pay_course_id=course_id)
 
