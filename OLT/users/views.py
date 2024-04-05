@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from OLT import settings
 from materials.models import Course, Lesson
 from users.models import User, Payments
-from users.pay_services import create_product, create_price
+from users.pay_services import create_product, create_price, create_session
 from users.permissions import IsOwner
 from users.serializers import UserSerializer, PaymentsSerializer
 
@@ -86,16 +86,16 @@ class PaymentsCreateAPIView(APIView):
         # Получем текущее время для поля pay_date
         pay_date = timezone.now()
 
-        # Создаем запись о платеже в нашей БД
-        payment = Payments.objects.create(user=user, pay_summ=pay_obj.price, pay_method=pay_method,
-                                          session_id=product_stripe,
-                                          payment_link=price_stripe, date_pay=pay_date, pay_lesson_id=lesson_id,
-                                          pay_course_id=course_id)
-
         # Создаем сессию для платежа в Stripe
         success_url = "http://example.com/success"  # Замените на ваш URL успешного платежа
         cancel_url = "http://example.com/cancel"  # Замените на ваш URL отмены платежа
-        session_url = payment.create_session(success_url, cancel_url)
+        session_id, session_url = create_session(price_stripe, success_url, cancel_url)
+
+        # Создаем запись о платеже в нашей БД
+        Payments.objects.create(user=user, pay_summ=pay_obj.price, pay_method=pay_method,
+                                session_id=session_id,
+                                payment_link=session_url, date_pay=pay_date, pay_lesson_id=lesson_id,
+                                pay_course_id=course_id)
 
         if session_url:
             # Если сессия создана успешно, возвращаем URL для оплаты
