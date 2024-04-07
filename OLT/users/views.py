@@ -83,7 +83,7 @@ class PaymentsCreateAPIView(APIView):
         # Создаем цену в Stripe
         price_stripe = create_price(product_stripe, pay_obj.price, 'BYN')
 
-        # Получем текущее время для поля pay_date
+        # Получаем текущее время для поля pay_date
         pay_date = timezone.now()
 
         # Создаем сессию для платежа в Stripe
