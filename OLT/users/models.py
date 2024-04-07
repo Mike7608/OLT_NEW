@@ -61,14 +61,7 @@ class Payments(models.Model):
                                     blank=True
                                     )
 
-    # def create_session(self, success_url, cancel_url):
-    #     """Создать сессию для платежа."""
-    #     if not self.session_id or not self.payment_link:
-    #         return None
-    #     return create_session(self.payment_link, success_url, cancel_url)
-
     def __str__(self):
-        # pylint: disable=no-member
         return f"Оплата от {self.user.email} за {self.pay_course or self.pay_lesson} проведена {self.date_pay}"
 
     class Meta:
