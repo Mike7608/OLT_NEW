@@ -1,6 +1,6 @@
 import os
-
 from celery import Celery
+from django.utils import timezone
 
 # Установить настройки по умолчанию из Django-проекта
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'OLT.settings')
@@ -15,6 +15,14 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Автоматически загружать задачи из всех зарегистрированных приложений Django
 app.autodiscover_tasks()
+
+# Настройка для celery beat
+app.conf.beat_schedule = {
+    'block_inactive_users': {
+        'task': 'OLT.tasks.block_inactive_users',
+        'schedule': timezone.timedelta(days=1),
+    }
+}
 
 # Пример использования
 # @app.task(bind=True)
