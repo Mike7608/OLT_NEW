@@ -7,8 +7,8 @@ from materials.models import Course, Subscription
 
 
 @shared_task
-def send_email_update_course(course_id):
-    course = Course.objects.get(id=course_id)
+def send_email_update_object(obj_id):
+    course = Course.objects.get(id=obj_id)
 
     # Если прошло более 4 часов с момента последнего обновления
     if timezone.now() - course.stamp_update > timedelta(hours=4):

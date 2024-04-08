@@ -3,7 +3,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from OLT.tasks import send_email_update_course
+from OLT.tasks import send_email_update_object
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import CoursePagination, LessonPagination
 from materials.serializers import CourseSerializer, LessonSerializer
@@ -57,8 +57,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        # После успешного обновления курса вызываем задачу для отправки сообщения
-        send_email_update_course.delay(obj_materials.id)
+        # После успешного обновления объекта вызываем задачу для отправки сообщения
+        send_email_update_object.delay(obj_materials.id)
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
