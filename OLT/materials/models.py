@@ -1,4 +1,6 @@
+
 from django.db import models
+from django.utils import timezone
 
 from users.models import User
 
@@ -9,6 +11,7 @@ class Course(models.Model):
     description = models.CharField(max_length=250, verbose_name='описание', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=None, verbose_name='user_id')
     price = models.DecimalField(decimal_places=2, max_digits=10, default=0, verbose_name='Цена курса')
+    stamp_update = models.DateTimeField(default=timezone.now, verbose_name='дата последнего обновления')
 
     def __str__(self):
         return f'{self.title}'
@@ -26,6 +29,7 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=None, verbose_name='user_id')
     price = models.DecimalField(decimal_places=2, max_digits=10, default=0, verbose_name='Цена урока')
+    stamp_update = models.DateTimeField(default=timezone.now, verbose_name='дата последнего обновления')
 
     def __str__(self):
         return f'{self.title}'
