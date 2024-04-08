@@ -52,13 +52,13 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        obj_materials = self.get_object()
+        serializer = self.get_serializer(obj_materials, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
         # После успешного обновления курса вызываем задачу для отправки сообщения
-        send_email_update_course.delay(instance.id)
+        send_email_update_course.delay(obj_materials.id)
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
