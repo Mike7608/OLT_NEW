@@ -3,6 +3,8 @@ from celery import shared_task
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+
+from OLT import settings
 from materials.models import Course, Subscription
 
 
@@ -17,7 +19,7 @@ def send_email_update_object(obj_id):
         send_mail(
             'Уведомление об обновлении курса',
             'Курс, на который вы подписались, обновлен.',
-            'info@my.com',
+            settings.EMAIL_HOST_USER,
             [Subscription.user.email],
             fail_silently=False,
         )
