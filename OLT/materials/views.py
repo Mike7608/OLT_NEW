@@ -58,7 +58,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         self.perform_update(serializer)
 
         # После успешного обновления объекта вызываем задачу для отправки сообщения
-        send_email_update_object.delay(obj_materials.id)
+        # send_email_update_object.delay(obj_materials.id)
+        send_email_update_object(obj_materials.id)
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
