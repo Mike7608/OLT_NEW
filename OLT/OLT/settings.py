@@ -181,6 +181,12 @@ CELERY_TASK_TRACK_STARTED = os.getenv('CELERY_TASK_TRACK_STARTED')
 # Максимальное время на выполнение задачи
 CELERY_TASK_TIME_LIMIT = os.getenv('CELERY_TASK_TIME_LIMIT')
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv('URL_REDIS_CACHE_LOCATION'),
+    }
+}
 
 # email настройки для отправки сообщений
 EMAIL_HOST = os.getenv('EMAIL_HOST')

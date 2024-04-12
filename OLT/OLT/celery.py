@@ -5,7 +5,7 @@ from django.utils import timezone
 # Установить настройки по умолчанию из Django-проекта
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'OLT.settings')
 
-app = Celery('config')
+app = Celery('OLT')
 
 # Использование здесь строки означает, что рабочему процессу не нужно сериализовать
 # объект конфигурации дочерним процессам.
