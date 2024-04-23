@@ -91,6 +91,8 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': 'db',
+        'PORT': '',
     }
 }
 
@@ -187,6 +189,7 @@ CACHES = {
         "LOCATION": os.getenv('URL_REDIS_CACHE_LOCATION'),
     }
 }
+
 
 # email настройки для отправки сообщений
 EMAIL_HOST = os.getenv('EMAIL_HOST')

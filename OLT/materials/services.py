@@ -11,6 +11,7 @@ def set_schedule(*args, **kwargs):
     schedule, created = IntervalSchedule.objects.get_or_create(
         every=24,
         period=IntervalSchedule.HOURS,
+
     )
     PeriodicTask.objects.create(
         interval=schedule,
